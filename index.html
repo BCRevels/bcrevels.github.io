@@ -7,9 +7,21 @@
     <title>Hello!</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
 <body>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+        </script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+        </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+        </script>
+
     <div class="jumbotron text-center">
         <h1> Hello! This is a work in progress!</h1>
         <p>Please come back later!</p>
@@ -20,25 +32,49 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Nothing Here Yet</h4>
-                        <p class="card-text">Just testing things out!</p>
+                        <h4 class="card-title">Enter the password:</h4>
+                        <p class="card-text "><input id="password" style="width: 100%"></input><br><button id="submit"
+                                type="button" class="btn btn-primary btn-block my-2" onclick="sendit()">Submit</button>
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col d-none d-md-block"></div>
         </div>
     </div>
+    <script>
+        function sendit() {
+
+            // $.get("https://api.github.com/repos/BCRevels/acmWebsite/languages").done(function(data){
+            //     alert(data.Vue);
+            // }).fail(function(error){
+            //     alert(error);
+            // })
+
+            let pw = document.getElementById("password").value;
+            let length = pw.length
+            let nums = [0, 0, 0, 0];
+            for (let i = 0; i < length; i++) {
+                if (i < 3) {
+                    nums[0] += pw.charCodeAt(i);
+                }
+                else if (i >= 3 && i < 6) {
+                    nums[1] += pw.charCodeAt(i);
+                }
+                else if (i >= 6 && i < 9) {
+                    nums[2] += pw.charCodeAt(i);
+                }
+                else if (i >= 9 && i < 12) {
+                    nums[3] += pw.charCodeAt(i);
+                }
+            }
+
+            let ip = `${Math.abs(nums[0] - 14)}.${Math.floor(nums[1] / 2) + 63}.${Math.abs(nums[2] - 81)}.${Math.floor(nums[3] / 4) + 8}`
+            alert(ip);
+        }
+    </script>
 
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-        </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-        </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-        </script>
 </body>
 
 </html>
