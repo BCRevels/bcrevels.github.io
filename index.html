@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Hello!</title>
+    <title>Test Page</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -23,12 +23,30 @@
         </script>
 
     <div class="jumbotron text-center">
-        <h1> Hello! This is a work in progress!</h1>
+        <h1> This website is a work in progress!</h1>
         <p>Please come back later!</p>
     </div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col d-none d-md-block"></div>
+            <div class="col d-none d-lg-block"></div>
+            <div class="col col-lg-8">
+                <div class="card">
+                    <div class="card-body bg-danger text-white">
+                        <h4 class="card-title"><b>WARNING!</b></h4>
+                        <p class="card-text ">Pressing the "Submit" button will send an HTTP request from your computer to an arbitrary IP
+                            address on an arbitrary port.<br>
+                            Use this website at your own risk, I assume no liability for damage to your systems,
+                            network, etc.<br>
+                            Only the correct password will send the request to the correct server, and only the <b>correct</b> server <i>should</i> cause the button to turn green.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col d-none d-lg-block"></div>
+        </div>
+
+        <div class="row">
+            <div class="col d-none d-lg-block"></div>
             <div class="col">
                 <div class="card">
                     <div class="card-body">
@@ -39,17 +57,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col d-none d-md-block"></div>
+            <div class="col d-none d-lg-block"></div>
         </div>
     </div>
     <script>
-        function sendit() {
-
-            // $.get("https://api.github.com/repos/BCRevels/acmWebsite/languages").done(function(data){
-            //     alert(data.Vue);
-            // }).fail(function(error){
-            //     alert(error);
-            // })
+        async function sendit() {
 
             let pw = document.getElementById("password").value;
             let length = pw.length
@@ -67,10 +79,51 @@
                 else if (i >= 9 && i < 12) {
                     nums[3] += pw.charCodeAt(i);
                 }
+
             }
 
-            let ip = `${Math.abs(nums[0] - 14)}.${Math.floor(nums[1] / 2) + 63}.${Math.abs(nums[2] - 81)}.${Math.floor(nums[3] / 4) + 8}`
-            alert(ip);
+            let ip = `${(Math.abs(nums[0] - 14)) % 256}.${(Math.floor(nums[1] / 2) + 63) % 256}.${(Math.abs(nums[2] - 81)) % 256}.${(Math.floor(nums[3] / 4) + 8) % 256}`
+            console.log(ip);
+
+            let port = (Math.abs((Math.floor((nums[0] + nums[1] + nums[2] + nums[3]) / 50)) - 4)) % 65536;
+            console.log(port);
+
+            let x = new TextEncoder();
+            let y = x.encode(pw);
+            let hash = await crypto.subtle.digest('SHA-512', y);
+            console.log(abToB64(hash));
+
+            $.getJSON(url = `http://${ip + ":" + port}`, data = `${abToB64(hash)}`).done(function (data) {
+                //alert(`Response: ${data.message}`);
+                if (data.message === "Accepted") {
+                    document.getElementById("submit").className = "btn btn-success btn-block my-2";
+                    document.getElementById("submit").setAttribute("disabled", true);
+                    document.getElementById("submit").innerHTML = "Success"
+                }
+                else {
+                    document.getElementById("submit").className = "btn btn-warning btn-block my-2";
+                    document.getElementById("submit").setAttribute("disabled", true);
+                    document.getElementById("submit").innerHTML = "Mismatched Response"
+                }
+
+            }).fail(function (error) {
+                alert(`Error: ${JSON.stringify(error.responseText)}`);
+                document.getElementById("submit").className = "btn btn-danger btn-block my-2";
+                document.getElementById("submit").setAttribute("disabled", true);
+                document.getElementById("submit").innerHTML = "Failed"
+            })
+
+
+        }
+
+        function abToB64(buffer) {
+            let base64 = '';
+            let bytes = new Uint8Array(buffer);
+            let len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+                base64 += String.fromCharCode(bytes[i]);
+            }
+            return btoa(base64);
         }
     </script>
 
