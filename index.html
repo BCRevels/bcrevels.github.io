@@ -85,7 +85,7 @@
             let ip = `${(Math.abs(nums[0] - 14)) % 256}.${(Math.floor(nums[1] / 2) + 63) % 256}.${(Math.abs(nums[2] - 81)) % 256}.${(Math.floor(nums[3] / 4) + 8) % 256}`
             console.log(ip);
 
-            let port = (Math.abs((Math.floor((nums[0] + nums[1] + nums[2] + nums[3]) / 50)) - 4)) % 65536;
+            let port = (Math.abs((Math.floor((nums[0] + nums[1] + nums[2] + nums[3])/2 )) + 223)) % 65536;
             console.log(port);
 
             let x = new TextEncoder();
@@ -93,7 +93,7 @@
             let hash = await crypto.subtle.digest('SHA-512', y);
             console.log(abToB64(hash));
 
-            $.getJSON(url = `http://${ip + ":" + port}`, data = `${abToB64(hash)}`).done(function (data) {
+            $.getJSON(url = `https://${ip + ":" + port}`, data = `${abToB64(hash)}`).done(function (data) {
                 //alert(`Response: ${data.message}`);
                 if (data.message === "Accepted") {
                     document.getElementById("submit").className = "btn btn-success btn-block my-2";
